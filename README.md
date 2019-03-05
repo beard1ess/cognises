@@ -18,6 +18,12 @@ cognises generate-config > ~/.cognises.yaml
 
 `ssh-config` writes generated SSH config based on configured providers.
 
+example:
+
+```
+cognises ssh-config > ~/.ssh/generated_config
+```
+
 It is recommended to set the generated output to a secondary SSH config file. For example, use an include in `.ssh/config`:
 
 ```
