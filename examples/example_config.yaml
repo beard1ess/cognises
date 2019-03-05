@@ -1,0 +1,44 @@
+# Configurables for 'ssh-config' command.
+ssh_generator_config:
+  # Options for generator to include in final SSH Config output
+  ssh_config_general:
+    port: 22
+    proxy_command: "ssh jumpserver -W %h:%p"
+    user: admin
+
+  # Options for private keys
+  private_key:
+    # REQUIRED path to ssh keys
+    key_path: "~/.ssh/cloud_keys/" 
+    # REQUIRED boolean value. If true will use the keypair name that instance was built with.
+    use_instance_keypair: True          
+    # If above false, uses provided keypair name in SSH config output.
+    custom_keypair: "mykeypem"          
+
+
+  # true/false determines if a public IP will be used in config if available
+  prefer_public: False 
+
+  # static hosts will be added as-is into generated config
+  static_hosts: |
+    Host *
+      StrictHostKeyChecking no
+      ConnectTimeout 5
+      ServerAliveInterval 10
+      ServerAliveCountMax 6
+    Host jumpserver
+      Hostname 10.8.0.1
+      User myuser
+      Port 22
+      IdentityFile /home/ec2-user/.ssh/id_rsa 
+    Host statichost
+      Hostname 10.8.0.56
+      User ec2-user
+      Port 22
+      IdentityFile /home/ec2-user/.ssh/id_rsa 
+      ProxyCommand ssh jumpserver -W %h:%p
+
+# List of cloud providers to include in search. Currently only supports AWS.
+# Uses SDK default for credential handling for now.
+providers: 
+  - aws
