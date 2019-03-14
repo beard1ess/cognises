@@ -27,7 +27,7 @@ cognises ssh-config > ~/.ssh/generated_config
 It is recommended to set the generated output to a secondary SSH config file. For example, use an include in `.ssh/config`:
 
 ```
-Include ~/.ssh/gererated_config
+Include ~/.ssh/generated_config
 ```
 
 ## Cloud Providers
