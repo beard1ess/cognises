@@ -21,7 +21,7 @@ type Server struct {
 
 const configTemplate = `
 Host {{.Host}}
-    {{with .Hostname -}}Hostname {{.}}\n{{end}}
+    {{with .Hostname -}}Hostname {{.}}{{end}}
     {{with .User -}}User {{.}}{{end}}
     {{with .Port -}}Port {{.}}{{end}}
     {{with .Identityfile -}}Identityfile {{.}}{{end}}

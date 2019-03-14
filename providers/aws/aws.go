@@ -62,14 +62,24 @@ func concatReservations(res []*ec2.Reservation) []*ec2.Instance {
 func getInstances(region string) interface{} {
 	var instances []*ec2.Instance
 	lsvc := ec2.New(sess, aws.NewConfig().WithRegion(region))
-	input := &ec2.DescribeInstancesInput{}
+	input := &ec2.DescribeInstancesInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   aws.String("instance-state-name"),
+				Values: []*string{
+					aws.String("running"),
+					aws.String("pending"),
+					aws.String("stopped"),
+				},
+			},
+		},
+	}
 	instanceOutput, err := lsvc.DescribeInstances(input)
 	check(err)
 	instances = append(instances, concatReservations(instanceOutput.Reservations)...)
 	pageToken := instanceOutput.NextToken
 
 	for pageToken != nil {
-		input := &ec2.DescribeInstancesInput{}
 		instanceOutput, err := lsvc.DescribeInstances(input)
 		pageToken = instanceOutput.NextToken
 		check(err)

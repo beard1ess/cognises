@@ -42,7 +42,11 @@ func getAWS() []s.Server {
 		i.Port = config.General.Port
 		for _, tag := range instance.Tags {
 			if *tag.Key == "Name" {
-				host = *tag.Value
+				if strings.Contains(*tag.Value, " ") {
+					host = strings.Replace(*tag.Value, " ", "_", -1)
+				} else {
+					host = *tag.Value
+				}
 				if strings.Contains(*tag.Value, ".") {
 					host = host + " " + strings.Split(*tag.Value, ".")[0]
 				}
@@ -55,7 +59,11 @@ func getAWS() []s.Server {
 		i.Host = host + " " + *instance.InstanceId
 
 		if config.PreferPublic {
-			i.Hostname = *instance.PublicIpAddress
+			if instance.PublicIpAddress != nil {
+				i.Hostname = *instance.PublicIpAddress
+			} else {
+				i.Hostname = *instance.PrivateIpAddress
+			}
 		} else {
 			i.Hostname = *instance.PrivateIpAddress
 		}
